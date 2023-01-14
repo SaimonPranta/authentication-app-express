@@ -9,7 +9,7 @@ exports.login = async (req, res) => {
 
         if (email && password) {
             const userArry = await user_collection.find({ email: email });
-         
+
 
             if (userArry.length > 0) {
                 bcrypt.compare(password, userArry[0].password, async (err, result) => {
@@ -84,9 +84,23 @@ exports.registration = async (req, res) => {
         }
 
     } catch (err) {
-        console.log(err)
         res.status(404).send({ failed: "Your Email, Phone Number Must Be Uniqu, please tryout latter" })
     }
 }
+
+exports.user = async (req, res) => {
+    try {
+        const email = req.email
+        const userId = req.id;
+        const user = await user_collection.findOne({ _id: userId, email: email });
+        user.password = null;
+        res.status(200).json({data: user})
+    } catch (error) {
+        res.status(200).json({})
+    }
+}
+
+
+
 
 
